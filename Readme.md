@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Иван Гончаров](https://up.htmlacademy.ru/javascript/16/user/22506).
-* Наставник: `Неизвестно`.
+* Наставник: [Артём Черкасов](https://up.htmlacademy.ru/javascript/16/user/530727).
 
 ---
 
