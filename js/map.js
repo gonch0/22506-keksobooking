@@ -6,7 +6,7 @@ var CHECKS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AD_AMOUNT = 8;
-var AD_NUMS = [1,2,3,4,5,6,7,8];
+var AD_NUMS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 var PRICE_MIN = 1000;
 var PRICE_MAX = 1000000;
@@ -28,7 +28,7 @@ var pinBlock = document.querySelector('.map__pins');
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
-};
+}
 
 var getRandomValue = function (values) {
   var value = values[getRandomInt(0, values.length)];
@@ -41,16 +41,16 @@ var getRandomList = function (list) {
   for (var i = 0; i < list.length; i++) {
     var randomInt = getRandomInt(0, sourceList.length);
     randomList[i] = sourceList[randomInt];
-    sourceList.splice(randomInt, 1)
+    sourceList.splice(randomInt, 1);
   }
   return randomList;
 };
 
 var getCutList = function (list) {
-  return list.splice(0, getRandomInt(0, list.length))
+  return list.splice(0, getRandomInt(0, list.length));
 };
 
-//1. Создайте массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку.
+//  1. Создайте массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку.
 
 var createAdvert = function (num) {
 
@@ -81,7 +81,7 @@ var createAdvert = function (num) {
       description: '',
       photos: getRandomList (PHOTOS)
     }
-  }
+  };
   return advert;
 };
 
@@ -95,22 +95,22 @@ var compileElements = function () {
 
 var adverts = compileElements();
 
-//2. У блока .map уберите класс .map--faded.
+//  2. У блока .map уберите класс .map--faded.
 
 document.querySelector('.map').classList.remove('map--faded');
 
-//3. На основе данных, созданных в первом пункте, создайте DOM-элементы, соответствующие меткам на карте, и заполните их данными из массива. Итоговую разметку метки .map__pin можно взять из шаблона #pin.
+//  3. На основе данных, созданных в первом пункте, создайте DOM-элементы, соответствующие меткам на карте, и заполните их данными из массива. Итоговую разметку метки .map__pin можно взять из шаблона #pin.
 
 var createPin = function (object) {
   var advertPin = pinTemplate.cloneNode(true);
-  advertPin.querySelector('.map__pin').style.left = object.location.x - 0.5*PIN_WIDTH + 'px';
+  advertPin.querySelector('.map__pin').style.left = object.location.x - 0.5 * PIN_WIDTH + 'px';
   advertPin.querySelector('.map__pin').style.top = object.location.y - PIN_HEIGHT + 'px';
   advertPin.querySelector('img').src = object.author.avatar;
   advertPin.querySelector('img').alt = object.offer.title;
   return advertPin;
 };
 
-//4. Отрисуйте сгенерированные DOM-элементы в блок .map__pins. Для вставки элементов используйте DocumentFragment.
+//  4. Отрисуйте сгенерированные DOM-элементы в блок .map__pins. Для вставки элементов используйте DocumentFragment.
 
 var renderPins = function (info) {
   var fragment = document.createDocumentFragment();
@@ -122,7 +122,7 @@ var renderPins = function (info) {
 
 renderPins(adverts);
 
-//5. На основе первого по порядку элемента из сгенерированного массива и шаблона #card создайте DOM-элемент объявления, заполните его данными из объекта и вставьте полученный DOM-элемент в блок .map перед блоком.map__filters-container
+//  5. На основе первого по порядку элемента из сгенерированного массива и шаблона #card создайте DOM-элемент объявления, заполните его данными из объекта и вставьте полученный DOM-элемент в блок .map перед блоком.map__filters-container
 
 var cardTemplate = document.querySelector('#card').content;
 var conformTypes = function (type) {
@@ -205,5 +205,3 @@ var renderCards = function (info) {
 };
 
 renderCards(adverts);
-
-
