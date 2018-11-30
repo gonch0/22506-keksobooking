@@ -6,6 +6,7 @@ var CHECKS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AD_AMOUNT = 8;
+var AD_NUMS = [1,2,3,4,5,6,7,8];
 
 var PRICE_MIN = 1000;
 var PRICE_MAX = 1000000;
@@ -59,7 +60,7 @@ var createAdvert = function (num) {
   var advert = {
 
     author: {
-      avatar: 'img/avatars/user0' + getRandomInt(1, AD_AMOUNT+1) + '.png',
+      avatar: 'img/avatars/user0' + AD_NUMS[num] + '.png',
     },
 
     location: {
@@ -199,9 +200,7 @@ var createCard = function (data) {
 
 var renderCards = function (info) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < info.length; i++) {
-    fragment.appendChild(createCard(info));
-  }
+  fragment.appendChild(createCard(info));
   pinBlock.appendChild(fragment);
 };
 
