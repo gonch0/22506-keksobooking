@@ -25,6 +25,7 @@ var PHOTO_HEIGHT = 40;
 
 var pinTemplate = document.querySelector('#pin').content;
 var pinBlock = document.querySelector('.map__pins');
+var map = document.querySelector('.map');
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -97,16 +98,19 @@ var adverts = compileElements();
 
 //  2. У блока .map уберите класс .map--faded.
 
-document.querySelector('.map').classList.remove('map--faded');
+map.classList.remove('map--faded');
 
 //  3. На основе данных, созданных в первом пункте, создайте DOM-элементы, соответствующие меткам на карте, и заполните их данными из массива. Итоговую разметку метки .map__pin можно взять из шаблона #pin.
 
 var createPin = function (object) {
   var advertPin = pinTemplate.cloneNode(true);
-  advertPin.querySelector('.map__pin').style.left = object.location.x - 0.5 * PIN_WIDTH + 'px';
-  advertPin.querySelector('.map__pin').style.top = object.location.y - PIN_HEIGHT + 'px';
-  advertPin.querySelector('img').src = object.author.avatar;
-  advertPin.querySelector('img').alt = object.offer.title;
+  var pinButton = advertPin.querySelector('.map__pin');
+  var pinImage = advertPin.querySelector('img');
+
+  pinButton.style.left = object.location.x - 0.5 * PIN_WIDTH + 'px';
+  pinButton.style.top = object.location.y - PIN_HEIGHT + 'px';
+  pinImage.src = object.author.avatar;
+  pinImage.alt = object.offer.title;
   return advertPin;
 };
 
@@ -126,22 +130,12 @@ renderPins(adverts);
 
 var cardTemplate = document.querySelector('#card').content;
 var conformTypes = function (type) {
-  var stringType = '';
   switch (type) {
-  case 'flat':
-    stringType = 'Квартира';
-    break;
-  case 'bungalo':
-    stringType = 'Бунгало';
-    break;
-  case 'house':
-    stringType = 'Дом';
-    break;
-  case 'palace':
-    stringType = 'Дворец';
-    break;
+    case 'flat': return 'Квартира';
+    case 'bungalo': return 'Бунгало';
+    case 'house': return'Дом';
+    case 'palace': return 'Дворец';
   }
-  return stringType;
 };
 
 
@@ -183,25 +177,36 @@ var createCard = function (data) {
   var firstCard = data[0];
   var advertCard = cardTemplate.cloneNode(true);
 
-  advertCard.querySelector('img').src = firstCard.author.avatar;
-  advertCard.querySelector('h3').textContent = firstCard.offer.title;
-  advertCard.querySelector('.popup__text--address').textContent = firstCard.offer.address;
-  advertCard.querySelector('.popup__text--price').textContent = firstCard.offer.price+'₽/ночь';
-  advertCard.querySelector('h4').textContent = conformTypes(firstCard.offer.type);
-  advertCard.querySelector('.popup__text--capacity').textContent = firstCard.offer.rooms + ' комнаты для ' + firstCard.offer.guests + ' гостей';
-  advertCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + firstCard.offer.checkin + ', выезд до ' + firstCard.offer.checkout;
-  advertCard.querySelector('.popup__features').innerHTML = '';
-  advertCard.querySelector('.popup__features').appendChild(createFeaturesList(firstCard.offer.features));
-  advertCard.querySelector('.popup__description').textContent = firstCard.offer.description;
-  advertCard.querySelector('.popup__photos').innerHTML = '';
-  advertCard.querySelector('.popup__photos').appendChild(createPhotoList(firstCard.offer.photos));
+  var cardImage = advertCard.querySelector('img');
+  var cardTitle = advertCard.querySelector('h3');
+  var cardAddress = advertCard.querySelector('.popup__text--address');
+  var cardPrice = advertCard.querySelector('.popup__text--price');
+  var cardTypes = advertCard.querySelector('h4');
+  var cardCapacity = advertCard.querySelector('.popup__text--capacity');
+  var cardTime = advertCard.querySelector('.popup__text--time');
+  var cardFeatures = advertCard.querySelector('.popup__features');
+  var cardDescription = advertCard.querySelector('.popup__description');
+  var cardPhotos = advertCard.querySelector('.popup__photos');
+
+  cardImage.src = firstCard.author.avatar;
+  cardTitle.textContent = firstCard.offer.title;
+  cardAddress.textContent = firstCard.offer.address;
+  cardPrice.textContent = firstCard.offer.price+'₽/ночь';
+  cardTypes.textContent = conformTypes(firstCard.offer.type);
+  cardCapacity.textContent = firstCard.offer.rooms + ' комнаты для ' + firstCard.offer.guests + ' гостей';
+  cardTime.textContent = 'Заезд после ' + firstCard.offer.checkin + ', выезд до ' + firstCard.offer.checkout;
+  cardFeatures.innerHTML = '';
+  cardFeatures.appendChild(createFeaturesList(firstCard.offer.features));
+  cardDescription.textContent = firstCard.offer.description;
+  cardPhotos.innerHTML = '';
+  cardPhotos.appendChild(createPhotoList(firstCard.offer.photos));
+
   return advertCard;
 };
 
 var renderCards = function (info) {
-  var fragment = document.createDocumentFragment();
-  fragment.appendChild(createCard(info));
-  pinBlock.appendChild(fragment);
+   map.insertBefore(info, map.querySelector('.map__filters-container'));
 };
 
-renderCards(adverts);
+var card = createCard(adverts);
+renderCards(card);
