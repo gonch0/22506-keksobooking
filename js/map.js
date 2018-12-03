@@ -23,13 +23,86 @@ var PIN_HEIGHT = 70;
 var PHOTO_WIDTH = 45;
 var PHOTO_HEIGHT = 40;
 
+var MAIN_PIN_WIDTH = 40;
+var MAIN_PIN_HEIGHT = 44;
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var pinTemplate = document.querySelector('#pin').content;
+
 var pinBlock = document.querySelector('.map__pins');
 var map = document.querySelector('.map');
+var mapPinMain = document.querySelector('.map__pin--main');
+var mapFilters = map.querySelector('.map__filters');
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+var mainPinCenterX =  parseInt(mapPinMain.style.left, 10) + Math.floor(0.5*mapPinMain.offsetWidth, 1);
+var mainPinCenterY =  parseInt(mapPinMain.style.top, 10) + Math.floor(0.5*mapPinMain.offsetHeight, 1);
+
+var adForm = document.querySelector('.ad-form');
+var pageFieldsets = document.querySelectorAll('fieldset');
+
+var formSelects = mapFilters.querySelectorAll('select');
+
+var housingType = mapFilters.querySelector('#housing-type');
+var housingPrice = mapFilters.querySelector('#housing-price');
+var housingRooms = mapFilters.querySelector('#housing-rooms');
+var housingGuests = mapFilters.querySelector('#housing-guests');
+var filterWifi = mapFilters.querySelector('#filter-wifi');
+var filterDishwasher = mapFilters.querySelector('#filter-dishwasher');
+var filterParking = mapFilters.querySelector('#filter-parking');
+var filterWasher = mapFilters.querySelector('#filter-washer');
+var filterElevator = mapFilters.querySelector('#filter-elevator');
+var filterConditioner = mapFilters.querySelector('#filter-conditioner');
+
+var addressInput = document.querySelector('input[name="address"]');
+
+var conformInputAddress = function () {
+  var mainPinX =  parseInt(mapPinMain.style.left, 10) + Math.floor(0.5*mapPinMain.offsetWidth, 1);
+  var mainPinY =  parseInt(mapPinMain.style.top, 10) + Math.floor(0.5*(mapPinMain.offsetHeight + MAIN_PIN_HEIGHT), 1);
+  addressInput.value = coords.x + ', ' + coords.y;
 }
+
+var removeDisable = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].removeAttribute('disabled');
+  }
+};
+
+var enablePage = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  mapFilters.classList.remove('ad-form--disabled');
+
+  removeDisable(Array.from(formSelects));
+  removeDisable(Array.from(pageFieldsets));
+  renderPins(adverts);
+
+  addressInput.value = mainPinCenterX + ', ' + mainPinCenterY;
+
+};
+
+//var showCard = function () {
+//  var mapPins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
+//};
+
+
+var onPopupEscPress = function(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var closePopup = function() {
+  var popup = document.querySelector('.popup')
+  popup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+var getRandomInt = function (min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
 
 var getRandomValue = function (values) {
   var value = values[getRandomInt(0, values.length)];
@@ -51,7 +124,6 @@ var getCutList = function (list) {
   return list.splice(0, getRandomInt(0, list.length));
 };
 
-//  1. Создайте массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку.
 
 var createAdvert = function (num) {
 
@@ -96,25 +168,26 @@ var compileElements = function () {
 
 var adverts = compileElements();
 
-//  2. У блока .map уберите класс .map--faded.
 
-map.classList.remove('map--faded');
 
-//  3. На основе данных, созданных в первом пункте, создайте DOM-элементы, соответствующие меткам на карте, и заполните их данными из массива. Итоговую разметку метки .map__pin можно взять из шаблона #pin.
 
 var createPin = function (object) {
   var advertPin = pinTemplate.cloneNode(true);
   var pinButton = advertPin.querySelector('.map__pin');
   var pinImage = advertPin.querySelector('img');
+  var card = createCard(adverts);
 
   pinButton.style.left = object.location.x - 0.5 * PIN_WIDTH + 'px';
   pinButton.style.top = object.location.y - PIN_HEIGHT + 'px';
   pinImage.src = object.author.avatar;
   pinImage.alt = object.offer.title;
+
+  pinButton.addEventListener('click', function() {
+    renderCard(card);
+  });
+
   return advertPin;
 };
-
-//  4. Отрисуйте сгенерированные DOM-элементы в блок .map__pins. Для вставки элементов используйте DocumentFragment.
 
 var renderPins = function (info) {
   var fragment = document.createDocumentFragment();
@@ -124,11 +197,8 @@ var renderPins = function (info) {
   pinBlock.appendChild(fragment);
 };
 
-renderPins(adverts);
 
-//  5. На основе первого по порядку элемента из сгенерированного массива и шаблона #card создайте DOM-элемент объявления, заполните его данными из объекта и вставьте полученный DOM-элемент в блок .map перед блоком.map__filters-container
 
-var cardTemplate = document.querySelector('#card').content;
 var conformTypes = function (type) {
   switch (type) {
     case 'flat': return 'Квартира';
@@ -137,7 +207,6 @@ var conformTypes = function (type) {
     case 'palace': return 'Дворец';
   }
 };
-
 
 var createFeature = function (feature) {
   var cardFeature = document.createElement('li');
@@ -187,6 +256,7 @@ var createCard = function (data) {
   var cardFeatures = advertCard.querySelector('.popup__features');
   var cardDescription = advertCard.querySelector('.popup__description');
   var cardPhotos = advertCard.querySelector('.popup__photos');
+  var cardClose = advertCard.querySelector('.popup__close');
 
   cardImage.src = firstCard.author.avatar;
   cardTitle.textContent = firstCard.offer.title;
@@ -201,12 +271,24 @@ var createCard = function (data) {
   cardPhotos.innerHTML = '';
   cardPhotos.appendChild(createPhotoList(firstCard.offer.photos));
 
+
+  cardClose.addEventListener('click', function() {
+    advertCard.remove();
+  });
+
   return advertCard;
 };
 
-var renderCards = function (info) {
+var renderCard = function (info) {
    map.insertBefore(info, map.querySelector('.map__filters-container'));
 };
 
-var card = createCard(adverts);
-renderCards(card);
+
+mapPinMain.addEventListener('mouseup', function() {
+  enablePage();
+});
+
+
+
+
+
