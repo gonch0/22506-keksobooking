@@ -306,7 +306,6 @@ mapPinMain.addEventListener('mouseup', function() {
 
 
 // Module 4 task 2
-
 //var PRICES = [0, 1000, 5000, 10000];
 
 var adForm = document.querySelector('.ad-form');
@@ -314,11 +313,8 @@ var formType = adForm.querySelector('#type');
 var formPrice = adForm.querySelector('#price');
 var formTimein = adForm.querySelector('#timein');
 var formTimeout = adForm.querySelector('#timeout');
-
 var formRooms = adForm.querySelector('#room_number');
 var formCapacity= adForm.querySelector('#capacity');
-
-
 
 var conformPrice = function() {
   var type = formType.value;
@@ -326,11 +322,9 @@ var conformPrice = function() {
   formPrice.min = types[type].price;
 }
 
-
 var onPriceChange = function() {
   conformPrice();
 }
-
 
 var validateCapacityRooms = function () {
   var errorMessage = '';
@@ -342,10 +336,6 @@ var validateCapacityRooms = function () {
   }
   formRooms.setCustomValidity(errorMessage);
 };
-
-var onPriceChange = function() {
-  conformPrice();
-}
 
 var onRoomsChange = function() {
   validateCapacityRooms();
