@@ -1,12 +1,37 @@
 'use strict';
 
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var TYPES = ['palace', 'flat', 'house', 'bungalo'];
+
+
 var CHECKS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var AD_AMOUNT = 8;
 var AD_NUMS = [1, 2, 3, 4, 5, 6, 7, 8];
+
+
+var types = {
+  bungalo: {
+    string: 'Бунгало',
+    price: 0
+  },
+
+  flat: {
+    string: 'Квартира',
+    price: 1000
+  },
+
+  house: {
+    string: 'Дом',
+    price: 5000
+  },
+
+  palace: {
+    string: 'Дворец',
+    price: 10000
+  }
+};
+
 
 var PRICE_MIN = 1000;
 var PRICE_MAX = 1000000;
@@ -45,16 +70,7 @@ var pageFieldsets = document.querySelectorAll('fieldset');
 
 var formSelects = mapFilters.querySelectorAll('select');
 
-var housingType = mapFilters.querySelector('#housing-type');
-var housingPrice = mapFilters.querySelector('#housing-price');
-var housingRooms = mapFilters.querySelector('#housing-rooms');
-var housingGuests = mapFilters.querySelector('#housing-guests');
-var filterWifi = mapFilters.querySelector('#filter-wifi');
-var filterDishwasher = mapFilters.querySelector('#filter-dishwasher');
-var filterParking = mapFilters.querySelector('#filter-parking');
-var filterWasher = mapFilters.querySelector('#filter-washer');
-var filterElevator = mapFilters.querySelector('#filter-elevator');
-var filterConditioner = mapFilters.querySelector('#filter-conditioner');
+
 
 var addressInput = document.querySelector('input[name="address"]');
 
@@ -145,7 +161,7 @@ var createAdvert = function (num) {
       title: TITLES[num],
       address: x + ', ' + y,
       price: getRandomInt(PRICE_MIN, PRICE_MAX),
-      type: getRandomValue(TYPES),
+      type: Object.keys(types)[getRandomInt(0, Object.keys(types).length)],
       rooms: getRandomInt (1, ROOMS_MAX + 1),
       guests: getRandomInt (1, GUESTS_MAX),
       checkin: getRandomValue (CHECKS),
@@ -167,7 +183,6 @@ var compileElements = function () {
 };
 
 var adverts = compileElements();
-
 
 
 
@@ -262,7 +277,7 @@ var createCard = function (data) {
   cardTitle.textContent = firstCard.offer.title;
   cardAddress.textContent = firstCard.offer.address;
   cardPrice.textContent = firstCard.offer.price+'₽/ночь';
-  cardTypes.textContent = conformTypes(firstCard.offer.type);
+  cardTypes.textContent = types[firstCard.offer.type].string;
   cardCapacity.textContent = firstCard.offer.rooms + ' комнаты для ' + firstCard.offer.guests + ' гостей';
   cardTime.textContent = 'Заезд после ' + firstCard.offer.checkin + ', выезд до ' + firstCard.offer.checkout;
   cardFeatures.innerHTML = '';
@@ -290,5 +305,58 @@ mapPinMain.addEventListener('mouseup', function() {
 
 
 
+// Module 4 task 2
+//var PRICES = [0, 1000, 5000, 10000];
+
+var adForm = document.querySelector('.ad-form');
+var formType = adForm.querySelector('#type');
+var formPrice = adForm.querySelector('#price');
+var formTimein = adForm.querySelector('#timein');
+var formTimeout = adForm.querySelector('#timeout');
+var formRooms = adForm.querySelector('#room_number');
+var formCapacity= adForm.querySelector('#capacity');
+
+var conformPrice = function() {
+  var type = formType.value;
+  formPrice.placeholder = types[type].price;
+  formPrice.min = types[type].price;
+}
+
+var onPriceChange = function() {
+  conformPrice();
+}
+
+var validateCapacityRooms = function () {
+  var errorMessage = '';
+  if (
+    +formRooms.value < +formCapacity.value ||
+    (+formRooms.value === 100 && +formCapacity.value !== 0) || (+formRooms.value !== 100 && +formCapacity.value === 0)
+  ) {
+    errorMessage = 'Количество комнат не соответствует количеству возможных гостей';
+  }
+  formRooms.setCustomValidity(errorMessage);
+};
+
+var onRoomsChange = function() {
+  validateCapacityRooms();
+}
+
+formType.addEventListener('change', onPriceChange);
+formRooms.addEventListener('change', onRoomsChange);
+formCapacity.addEventListener('change', onRoomsChange);
+
+formTimein.addEventListener('change', function (evt) {
+  var targetValue = evt.target.value;
+  if (targetValue !== formTimeout.value) {
+    formTimeout.value = targetValue;
+  }
+});
+
+formTimeout.addEventListener('change', function (evt) {
+  var targetValue = evt.target.value;
+  if (targetValue !== formTimein.value) {
+    formTimein.value = targetValue;
+  }
+});
 
 
