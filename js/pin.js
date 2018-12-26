@@ -5,6 +5,7 @@
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinBlock = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
+
   var createPin = function (object, onPinButtonClick) {
     var advertPin = pinTemplate.cloneNode(true);
 

@@ -67,6 +67,32 @@
     }
   });
 
+  //Отправка данных на сервер:
+  var onServerSuccess = function() {
+    var footer = document.querySelector('footer');
+    var successTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successElement = successTemplate.cloneNode(true);
+
+    var onSuccessClose = function () {
+      successElement.remove();
+    };
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === data.KEYCODES.esc) {
+        onSuccessClose();
+      }
+    });
+
+    footer.insertAdjacentElement('afterbegin', successElement);
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    console.log ('Успех1');
+    window.backend.save(new FormData(adForm), onServerSuccess, window.data.onServerError);
+    evt.preventDefault();
+  });
+
+
 })();
 
 

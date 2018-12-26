@@ -7,13 +7,13 @@
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
   var pinBlock = document.querySelector('.map__pins');
+
   var setStyleX = function (x) {
     mapPinMain.style.left = x + 'px';
   };
   var setStyleY = function (y) {
     mapPinMain.style.top = y + 'px';
   };
-
 
   var mapFilters = map.querySelector('.map__filters');
 
@@ -33,26 +33,31 @@
     removeDisable(Array.from(formSelects));
     removeDisable(Array.from(pageFieldsets));
 
-    var elements = renderMapElements(window.data.adverts);
-    pinBlock.appendChild(elements);
 
+    var onLoadSuccess = function (adverts) {
+      var fragment = document.createDocumentFragment();
+
+      window.data.adverts = adverts;
+
+      for (var i = 0; i < adverts.length; i++) {
+        if (adverts[i].offer) {
+          var pinElement = window.pin.createPin(adverts[i]);
+          pinElement.setAttribute('pin-num', i);
+          fragment.appendChild(pinElement);
+        }
+      }
+      pinBlock.appendChild(fragment);
+    };
+    window.backend.load(onLoadSuccess, window.backend.onServerError);
   };
+
+  //console.log ('HEY');
+  //console.log (window.data.adverts);
 
   var removeDisable = function (elements) {
     for (var i = 0; i < elements.length; i++) {
       elements[i].removeAttribute('disabled');
     }
-  };
-
-
-  var renderMapElements = function (info) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < info.length; i++) {
-      var pinElement = window.pin.createPin(info[i]);
-      pinElement.setAttribute('pin-num', i);
-      fragment.appendChild(pinElement);
-    }
-    return fragment;
   };
 
 
@@ -69,7 +74,6 @@
   };
 
   //Drag and Drop главного пина
-
   mapPinMain.addEventListener('mousedown', function(evt) {
     evt.preventDefault();
 
@@ -96,8 +100,8 @@
 
       if (x < 0) {
         setStyleX(0);
-      } else if (x > data.PIN.x.max - data.MAIN_PIN.width) {
-        setStyleX(data.PIN.x.max - data.MAIN_PIN.width);
+      } else if (x > window.data.PIN.x.max - window.data.MAIN_PIN.width) {
+        setStyleX(window.data.PIN.x.max - window.data.MAIN_PIN.width);
       } else {
         setStyleX(x);
       }
@@ -128,6 +132,4 @@
 
 })();
 
-  //var showCard = function () {
-  //  var mapPins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
-  //};
+
