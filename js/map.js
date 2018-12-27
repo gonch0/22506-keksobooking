@@ -33,26 +33,25 @@
     removeDisable(Array.from(formSelects));
     removeDisable(Array.from(pageFieldsets));
 
-
     var onLoadSuccess = function (adverts) {
-      var fragment = document.createDocumentFragment();
-
       window.data.adverts = adverts;
-
-      for (var i = 0; i < adverts.length; i++) {
-        if (adverts[i].offer) {
-          var pinElement = window.pin.createPin(adverts[i]);
-          pinElement.setAttribute('pin-num', i);
-          fragment.appendChild(pinElement);
-        }
-      }
-      pinBlock.appendChild(fragment);
+      pinBlock.appendChild(renderMapElements(adverts));
     };
     window.backend.load(onLoadSuccess, window.backend.onServerError);
   };
 
-  //console.log ('HEY');
-  //console.log (window.data.adverts);
+  var renderMapElements = function (info) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < info.length; i++) {
+      if (info[i].offer) {
+        var pinElement = window.pin.createPin(info[i]);
+        pinElement.setAttribute('pin-num', i);
+        fragment.appendChild(pinElement);
+      }
+    }
+    return fragment;
+  };
+
 
   var removeDisable = function (elements) {
     for (var i = 0; i < elements.length; i++) {

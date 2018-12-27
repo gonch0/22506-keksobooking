@@ -43,7 +43,6 @@
 
   //Функция создания карточки
   var createCard = function (cardData) {
-
     var advertCard = cardTemplate.cloneNode(true);
 
     var cardImage = advertCard.querySelector('.popup__avatar');

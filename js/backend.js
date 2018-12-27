@@ -6,9 +6,13 @@
   var LOAD_URL = 'https://js.dump.academy/keksobooking/data';
   var MAX_TIMEOUT = 10000; //10s
   var SUCCESS_STATUS = 200;
+  var method = {
+    get: 'GET',
+    post: 'POST'
+  };
 
-  //Функция загрузки данных с сервера
-  var load = function (onLoad, onError) {
+  //Вспомогательная функция для load и save
+  var createXhr = function (onLoad, onError, method, url, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -29,22 +33,27 @@
     });
 
     xhr.timeout = MAX_TIMEOUT;
+    console.log('data');
+    console.log(data);
+    xhr.open(method, url);
+    if (data) {
+      xhr.send(data);
+    } else {
+      xhr.send();
+    }
+  };
 
-    xhr.open('GET', LOAD_URL);
-    xhr.send();
+  //Функция загрузки данных с сервера
+  var load = function (onLoad, onError) {
+    console.log(method.get);
+    createXhr(onLoad, onError, method.get, LOAD_URL);
   };
 
   //Функция записи данных на сервер
-  var save =  function (data, onLoad, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function() {
-      onLoad(xhr.response);
-    });
-
-    xhr.open('POST', SAVE_URL);
-    xhr.send(data);
+  var save = function (onLoad, onError, dataForm) {
+    console.log('DATADATAAA');
+    console.log(data);
+    createXhr(onLoad, onError, method.post, SAVE_URL, dataForm);
   };
 
   //Функция обработки ошибки получения данных
@@ -69,8 +78,7 @@
     });
 
     footer.insertAdjacentElement('afterbegin', errorElement);
-  }
-
+  };
 
   window.backend = {
     load: load,

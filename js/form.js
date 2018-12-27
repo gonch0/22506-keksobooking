@@ -16,7 +16,6 @@
     var mainPinY =  parseInt(mapPinMain.style.top, 10) + Math.floor(0.5*(mapPinMain.offsetHeight + MAIN_PIN_HEIGHT), 1);
   }
 
-  var adForm = document.querySelector('.ad-form');
   var formType = adForm.querySelector('#type');
   var formPrice = adForm.querySelector('#price');
   var formTimein = adForm.querySelector('#timein');
@@ -87,8 +86,7 @@
   };
 
   adForm.addEventListener('submit', function (evt) {
-    console.log ('Успех1');
-    window.backend.save(new FormData(adForm), onServerSuccess, window.data.onServerError);
+    window.backend.save(onServerSuccess, window.backend.onServerError, new FormData(adForm));
     evt.preventDefault();
   });
 
