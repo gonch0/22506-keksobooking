@@ -5,9 +5,9 @@
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinBlock = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
-  var createPin = function (object, onPinButtonClick) {
-    var advertPin = pinTemplate.cloneNode(true);
 
+  var createPin = function (object) {
+    var advertPin = pinTemplate.cloneNode(true);
     var pinImage = advertPin.querySelector('img');
 
     advertPin.style.left = object.location.x - 0.5 * window.data.PIN.width + 'px';

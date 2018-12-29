@@ -6,6 +6,8 @@
   var map = document.querySelector('.map');
   var mapFilters = map.querySelector('.map__filters');
 
+
+  //Функции создания данных для карточки
   var createFeature = function (feature) {
     var cardFeature = document.createElement('li');
     cardFeature.classList.add('popup__feature');
@@ -39,8 +41,8 @@
     return fragment;
   };
 
-  var createCard = function (firstCard) {
-
+  //Функция создания карточки
+  var createCard = function (cardData) {
     var advertCard = cardTemplate.cloneNode(true);
 
     var cardImage = advertCard.querySelector('.popup__avatar');
@@ -55,23 +57,28 @@
     var cardPhotos = advertCard.querySelector('.popup__photos');
     var cardClose = advertCard.querySelector('.popup__close');
 
-    cardImage.src = firstCard.author.avatar;
-    cardTitle.textContent = firstCard.offer.title;
-    cardAddress.textContent = firstCard.offer.address;
-    cardPrice.textContent = firstCard.offer.price+'₽/ночь';
-    cardTypes.textContent = window.data.types[firstCard.offer.type].name;
-    cardCapacity.textContent = firstCard.offer.rooms + ' комнаты для ' + firstCard.offer.guests + ' гостей';
-    cardTime.textContent = 'Заезд после ' + firstCard.offer.checkin + ', выезд до ' + firstCard.offer.checkout;
+    cardImage.src = cardData.author.avatar;
+    cardTitle.textContent = cardData.offer.title;
+    cardAddress.textContent = cardData.offer.address;
+    cardPrice.textContent = cardData.offer.price+'₽/ночь';
+    cardTypes.textContent = window.data.types[cardData.offer.type].name;
+    cardCapacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
+    cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
     cardFeatures.innerHTML = '';
-    cardFeatures.appendChild(createFeaturesList(firstCard.offer.features));
-    cardDescription.textContent = firstCard.offer.description;
+    cardFeatures.appendChild(createFeaturesList(cardData.offer.features));
+    cardDescription.textContent = cardData.offer.description;
     cardPhotos.innerHTML = '';
-    cardPhotos.appendChild(createPhotoList(firstCard.offer.photos));
+    cardPhotos.appendChild(createPhotoList(cardData.offer.photos));
 
     cardClose.addEventListener('click', function() {
       advertCard.remove();
     });
 
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.data.KEYCODES.esc) {
+        advertCard.remove();
+      }
+    });
     return advertCard;
   };
 

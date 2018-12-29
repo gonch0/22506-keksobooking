@@ -16,7 +16,6 @@
     var mainPinY =  parseInt(mapPinMain.style.top, 10) + Math.floor(0.5*(mapPinMain.offsetHeight + MAIN_PIN_HEIGHT), 1);
   }
 
-  var adForm = document.querySelector('.ad-form');
   var formType = adForm.querySelector('#type');
   var formPrice = adForm.querySelector('#price');
   var formTimein = adForm.querySelector('#timein');
@@ -66,6 +65,31 @@
       formTimein.value = targetValue;
     }
   });
+
+  //Отправка данных на сервер:
+  var onServerSuccess = function() {
+    var footer = document.querySelector('footer');
+    var successTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successElement = successTemplate.cloneNode(true);
+
+    var onSuccessClose = function () {
+      successElement.remove();
+    };
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === data.KEYCODES.esc) {
+        onSuccessClose();
+      }
+    });
+
+    footer.insertAdjacentElement('afterbegin', successElement);
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.save(onServerSuccess, window.backend.onServerError, new FormData(adForm));
+    evt.preventDefault();
+  });
+
 
 })();
 
