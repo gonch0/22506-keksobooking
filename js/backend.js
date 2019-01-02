@@ -33,8 +33,6 @@
     });
 
     xhr.timeout = MAX_TIMEOUT;
-    console.log('data');
-    console.log(data);
     xhr.open(method, url);
     if (data) {
       xhr.send(data);
@@ -45,7 +43,6 @@
 
   //Функция загрузки данных с сервера
   var load = function (onLoad, onError) {
-    console.log(method.get);
     createXhr(onLoad, onError, method.get, LOAD_URL);
   };
 
