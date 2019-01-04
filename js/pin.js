@@ -15,7 +15,6 @@
     pinImage.src = pinData.author.avatar;
     pinImage.alt = pinData.offer.title;
 
-
     advertPin.addEventListener('click', function () {
       var popup = document.querySelector('.popup');
       if (popup) {
