@@ -45,7 +45,6 @@
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < info.length && i < MAX_PINS; i++) {
       var pinElement = window.pin.createPin(info[i]);
-      pinElement.setAttribute('pin-num', i);
       fragment.appendChild(pinElement);
     }
     return fragment;
@@ -143,10 +142,9 @@
   var updatePins = function (ads) {
     removePins();
     var filteredAdverts = applyFilters(window.data.adverts);
-    window.data.adverts = filteredAdverts;
     pinBlock.appendChild(renderMapElements(filteredAdverts));
   };
-  
+
   //Фильтры и вспомогательные функции
   var checkTypesMatch = function (data) {
     return (
@@ -197,9 +195,8 @@
 
   var applyFilters = function (ads) {
     var filteredAds = ads.filter(function(ad) {
-      //console.log('checkTYPES');
-      console.log(checkTypesMatch(ad) + ' ' + checkPricesMatch(ad) + ' ' + checkRoomsMatch(ad) + ' ' + checkGuestsMatch(ad) + ' ' + checkFeaturesMatch(ad));
 
+      //console.log(checkTypesMatch(ad) + ' ' + checkPricesMatch(ad) + ' ' + checkRoomsMatch(ad) + ' ' + checkGuestsMatch(ad) + ' ' + checkFeaturesMatch(ad));
       return (
         checkTypesMatch(ad) &&
         checkPricesMatch(ad) &&
@@ -219,9 +216,11 @@
   };
 
   //Обработчики
-  var onHousingElementChange = window.debounce(function () {
-    updatePins();
-  });
+  var onHousingElementChange = function () {
+    window.debounce (function () {
+      updatePins();
+    })
+  };
 
   mapFilters.addEventListener('change', onHousingElementChange);
 
