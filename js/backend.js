@@ -48,8 +48,6 @@
 
   //Функция записи данных на сервер
   var save = function (onLoad, onError, dataForm) {
-    console.log('DATADATAAA');
-    console.log(data);
     createXhr(onLoad, onError, method.post, SAVE_URL, dataForm);
   };
 

@@ -1248,3 +1248,23 @@ fieldset {
   outline: none;
   opacity: 0.6;
 }
+
+.ad-form__upload,
+.ad-form__field {
+  position: relative;
+}
+
+.ad-form-header__input,
+.ad-form__upload .ad-form__input {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+
+  width: 150px;
+  height: 100%;
+
+  opacity: 0;
+  /*border: 5px solid red;*/
+}
+
