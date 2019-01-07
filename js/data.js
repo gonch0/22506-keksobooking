@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
 
   var types = {
@@ -24,11 +23,6 @@
     }
   };
 
-  var PRICE = {
-    min: 1000,
-    max: 1000000
-  }
-
   var PIN = {
     x: {
       min: 50,
@@ -50,7 +44,9 @@
 
   var MAIN_PIN = {
     width: 62,
-    height: 62
+    height: 62,
+    left: 570,
+    top: 375
   };
 
   var KEYCODES = {
@@ -63,7 +59,6 @@
   window.data = {
     PIN: PIN,
     MAIN_PIN: MAIN_PIN,
-    PRICE: PRICE,
     PHOTO: PHOTO,
     KEYCODES: KEYCODES,
     types: types,

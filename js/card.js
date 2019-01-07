@@ -3,11 +3,8 @@
 (function () {
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var map = document.querySelector('.map');
-  var mapFilters = map.querySelector('.map__filters');
 
-
-  //Функции создания данных для карточки
+  // Функции создания данных для карточки
   var createFeature = function (feature) {
     var cardFeature = document.createElement('li');
     cardFeature.classList.add('popup__feature');
@@ -18,9 +15,9 @@
 
   var createFeaturesList = function (featuresList) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < featuresList.length; i++) {
-      fragment.appendChild(createFeature(featuresList[i]));
-    }
+    featuresList.forEach(function (feauture) {
+      fragment.appendChild(createFeature(feauture));
+    });
     return fragment;
   };
 
@@ -35,13 +32,14 @@
 
   var createPhotoList = function (photosList) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photosList.length; i++) {
-      fragment.appendChild(createPhoto (photosList[i]));
-    }
+
+    photosList.forEach(function (photo) {
+      fragment.appendChild(createPhoto(photo));
+    });
     return fragment;
   };
 
-  //Функция создания карточки
+  // Функция создания карточки
   var createCard = function (cardData) {
     var advertCard = cardTemplate.cloneNode(true);
 
@@ -60,7 +58,7 @@
     cardImage.src = cardData.author.avatar;
     cardTitle.textContent = cardData.offer.title;
     cardAddress.textContent = cardData.offer.address;
-    cardPrice.textContent = cardData.offer.price+'₽/ночь';
+    cardPrice.textContent = cardData.offer.price + '₽/ночь';
     cardTypes.textContent = window.data.types[cardData.offer.type].name;
     cardCapacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
@@ -70,7 +68,7 @@
     cardPhotos.innerHTML = '';
     cardPhotos.appendChild(createPhotoList(cardData.offer.photos));
 
-    cardClose.addEventListener('click', function() {
+    cardClose.addEventListener('click', function () {
       advertCard.remove();
     });
 
@@ -82,11 +80,23 @@
     return advertCard;
   };
 
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === window.data.KEYCODES.esc) {
+      closePopup();
+    }
+  };
+
+  var closePopup = function () {
+    var popup = document.querySelector('.popup');
+    if (popup) {
+      popup.classList.add('hidden');
+    }
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
 
   window.card = {
-    createCard: createCard
-  }
+    createCard: createCard,
+    closePopup: closePopup
+  };
 
 }());
-
-
