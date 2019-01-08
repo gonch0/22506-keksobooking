@@ -11,6 +11,9 @@
     post: 'POST'
   };
 
+  var footer = document.querySelector('footer');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
   // Вспомогательная функция для load и save
   var createXhr = function (onLoad, onError, methodValue, url, data) {
     var xhr = new XMLHttpRequest();
@@ -53,8 +56,6 @@
 
   // Функция обработки ошибки получения данных
   var onServerError = function (message) {
-    var footer = document.querySelector('footer');
-    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorElement = errorTemplate.cloneNode(true);
     var errorMessage = errorElement.querySelector('.error__message');
     var errorButton = errorElement.querySelector('.error__button');

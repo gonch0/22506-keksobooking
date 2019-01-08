@@ -58,13 +58,11 @@
 
   // Обработка загрузки фотографий
   var onPhotoUpload = function () {
-    var files = photoChooser.files;
+    var files = Array.from(photoChooser.files);
     var photo = document.createElement('img');
+    files.forEach(function (file) {
 
-    for (var i = 0; i < files.length; i++) {
-      var file = photoChooser.files[i];
       var fileName = file.name.toLowerCase();
-
       var matches = FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
       });
@@ -84,12 +82,12 @@
         });
         reader.readAsDataURL(file);
       }
-    }
+    });
     photoPreview.remove();
   };
 
   var resetPhotos = function () {
-    var photoPreviewList = document.querySelectorAll('.ad-form__photo');
+    var photoPreviewList = photoPreviewContainer.querySelectorAll('.ad-form__photo');
     photoPreviewList.forEach(function (element) {
       element.remove();
     });

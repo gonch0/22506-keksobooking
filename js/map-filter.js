@@ -23,21 +23,14 @@
   };
 
   var checkPricesMatch = function (data) {
-    var priceMatch = true;
     if (housingPrice.value !== 'any') {
       switch (housingPrice.value) {
-        case 'low':
-          priceMatch = data.offer.price < PRICE_RANGE.low;
-          break;
-        case 'middle':
-          priceMatch = data.offer.price >= PRICE_RANGE.low && data.offer.price < PRICE_RANGE.high;
-          break;
-        case 'high':
-          priceMatch = data.offer.price >= PRICE_RANGE.high;
-          break;
+        case 'low': return data.offer.price < PRICE_RANGE.low;
+        case 'middle': return data.offer.price >= PRICE_RANGE.low && data.offer.price < PRICE_RANGE.high;
+        case 'high': return data.offer.price >= PRICE_RANGE.high;
       }
     }
-    return priceMatch;
+    return true;
   };
 
   var checkRoomsMatch = function (data) {

@@ -8,7 +8,6 @@
   var formInputs = document.querySelectorAll('input');
   var formElements = document.querySelectorAll('fieldset');
 
-
   var formType = adForm.querySelector('#type');
   var formPrice = adForm.querySelector('#price');
   var formTimein = adForm.querySelector('#timein');
@@ -16,13 +15,12 @@
   var formRooms = adForm.querySelector('#room_number');
   var formCapacity = adForm.querySelector('#capacity');
 
+  var footer = document.querySelector('footer');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+
   var setDisable = function (elements, remove) {
     elements.forEach(function (element) {
-      if (remove) {
-        element.removeAttribute('disabled');
-      } else {
-        element.setAttribute('disabled', '');
-      }
+      element.disabled = !remove;
     });
   };
 
@@ -126,8 +124,6 @@
   });
 
   var onServerSuccess = function () {
-    var footer = document.querySelector('footer');
-    var successTemplate = document.querySelector('#success').content.querySelector('.success');
     var successElement = successTemplate.cloneNode(true);
 
     var onSuccessClose = function () {
