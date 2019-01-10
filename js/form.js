@@ -28,6 +28,8 @@
     adForm.classList.remove('ad-form--disabled');
     setDisable(formElements, true);
     setDisable(formInputs, true);
+    validatePrice();
+    validateCapacityRooms();
   };
 
   var disableForm = function () {
@@ -101,8 +103,6 @@
     formCapacity.setCustomValidity(errorMessage);
   };
 
-  validatePrice();
-  validateCapacityRooms();
 
   formRooms.addEventListener('change', validateCapacityRooms);
   formCapacity.addEventListener('change', validateCapacityRooms);
@@ -136,6 +136,8 @@
       }
     });
 
+    document.addEventListener('click', onSuccessClose);
+
     footer.insertAdjacentElement('afterbegin', successElement);
   };
 
@@ -144,6 +146,8 @@
   });
 
   adForm.addEventListener('submit', function (evt) {
+    validatePrice();
+    validateCapacityRooms();
     window.backend.save(onServerSuccess, window.backend.onServerError, new FormData(adForm));
     window.map.disablePage();
     evt.preventDefault();

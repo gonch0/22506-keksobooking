@@ -14,8 +14,10 @@
   var submitButton = document.querySelector('.ad-form__submit');
   var formSelects = map.querySelectorAll('select');
 
-  var setStyleX = function (x) {
+  var mainPinCenterX = parseInt(mapPinMain.style.left, 10) + Math.floor(0.5 * mapPinMain.offsetWidth, 1);
+  var mainPinCenterY = parseInt(mapPinMain.style.top, 10) + Math.floor(0.5 * mapPinMain.offsetHeight, 1);
 
+  var setStyleX = function (x) {
     mapPinMain.style.left = x + 'px';
   };
   var setStyleY = function (y) {
@@ -26,8 +28,9 @@
   var enablePage = function () {
     map.classList.remove('map--faded');
     window.form.setDisable(formSelects, true);
-    housingFeatures.removeAttribute('disabled');
+    housingFeatures.disabled = true;
     window.form.enableForm();
+    submitButton.disabled = false;
     var onLoadSuccess = function (adverts) {
       window.data.adverts = adverts;
       pinBlock.appendChild(renderMapElements(adverts));
@@ -45,9 +48,15 @@
     setStyleX(window.data.MAIN_PIN.left);
     setStyleY(window.data.MAIN_PIN.top);
     mapFilters.reset();
-    submitButton.setAttribute('disabled', '');
+    submitButton.disabled = true;
+    setAddress();
   };
 
+  var setAddress = function () {
+    addressInput.value = mainPinCenterX + ', ' + mainPinCenterY;
+  };
+
+  setAddress();
   resetButton.addEventListener('click', disablePage);
 
   var renderMapElements = function (info) {

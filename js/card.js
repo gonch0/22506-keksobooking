@@ -55,6 +55,21 @@
     var cardPhotos = advertCard.querySelector('.popup__photos');
     var cardClose = advertCard.querySelector('.popup__close');
 
+    var features = cardData.offer.features;
+    var photos = cardData.offer.photos;
+
+    var addList = function (element, list) {
+      if (list.length !== 0) {
+        if (element === cardFeatures) {
+          element.appendChild(createFeaturesList(list));
+        } else {
+          element.appendChild(createPhotoList(list));
+        }
+      } else {
+        element.remove();
+      }
+    };
+
     cardImage.src = cardData.author.avatar;
     cardTitle.textContent = cardData.offer.title;
     cardAddress.textContent = cardData.offer.address;
@@ -63,10 +78,11 @@
     cardCapacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
     cardFeatures.innerHTML = '';
-    cardFeatures.appendChild(createFeaturesList(cardData.offer.features));
+
+    addList(cardFeatures, features);
     cardDescription.textContent = cardData.offer.description;
     cardPhotos.innerHTML = '';
-    cardPhotos.appendChild(createPhotoList(cardData.offer.photos));
+    addList(cardPhotos, photos);
 
     cardClose.addEventListener('click', function () {
       advertCard.remove();
@@ -99,4 +115,4 @@
     closePopup: closePopup
   };
 
-}());
+})();

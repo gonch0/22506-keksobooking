@@ -19,7 +19,12 @@
       var popup = document.querySelector('.popup');
       if (popup) {
         popup.remove();
+        var activePins = document.querySelectorAll('.map__pin--active');
+        activePins.forEach(function (pin) {
+          pin.classList.remove('map__pin--active');
+        });
       }
+      advertPin.classList.add('map__pin--active');
       var cardItem = window.card.createCard(pinData);
       map.insertBefore(cardItem, pinBlock);
     });
