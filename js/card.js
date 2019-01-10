@@ -58,15 +58,11 @@
     var features = cardData.offer.features;
     var photos = cardData.offer.photos;
 
-    var addList = function (element, list) {
-      if (list.length !== 0) {
-        if (element === cardFeatures) {
-          element.appendChild(createFeaturesList(list));
-        } else {
-          element.appendChild(createPhotoList(list));
-        }
+    var addList = function (element, list, generator) {
+      if (list.length === 0) {
+        element.classList.add('hidden');
       } else {
-        element.remove();
+        element.appendChild(generator(list));
       }
     };
 
@@ -79,10 +75,10 @@
     cardTime.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
     cardFeatures.innerHTML = '';
 
-    addList(cardFeatures, features);
+    addList(cardFeatures, features, createFeaturesList);
     cardDescription.textContent = cardData.offer.description;
     cardPhotos.innerHTML = '';
-    addList(cardPhotos, photos);
+    addList(cardPhotos, photos, createPhotoList);
 
     cardClose.addEventListener('click', function () {
       advertCard.remove();
