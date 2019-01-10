@@ -148,9 +148,14 @@
   adForm.addEventListener('submit', function (evt) {
     validatePrice();
     validateCapacityRooms();
-    window.backend.save(onServerSuccess, window.backend.onServerError, new FormData(adForm));
-    window.map.disablePage();
-    evt.preventDefault();
+
+    if (adForm.checkValidity()) {
+      window.backend.save(onServerSuccess, window.backend.onServerError, new FormData(adForm));
+      window.map.disablePage();
+      evt.preventDefault();
+    } else {
+      adForm.reportValidity();
+    }
   });
 
   window.form = {
